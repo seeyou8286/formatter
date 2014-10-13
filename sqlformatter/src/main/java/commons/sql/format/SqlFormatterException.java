@@ -13,8 +13,3 @@ public class SqlFormatterException extends IOException
     super(argMessage);
   }
 }
-
-/* Location:           E:\SQLBeautifier\
- * Qualified Name:     blanco.commons.sql.format.BlancoSqlFormatterException
- * JD-Core Version:    0.6.2
- */

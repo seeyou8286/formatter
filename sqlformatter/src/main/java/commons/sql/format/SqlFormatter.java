@@ -3,7 +3,6 @@ package commons.sql.format;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.PrintStream;
 import java.util.List;
 import java.util.Stack;
 
@@ -134,10 +133,7 @@ public class SqlFormatter
       token = (SqlToken)argList.get(index);
       if (token.getType() == 1)
       {
-    	if (token.getString().equalsIgnoreCase("COUNT")||token.getString().equalsIgnoreCase("FUNCTION")||
-    			token.getString().equalsIgnoreCase("MAX")) {
-              encounterConcate = true;
-            }  
+    	
     	  
         if (token.getString().equals("(")) {
           this.functionBracket.push(this.fRule.isFunction(prev.getString()) ? Boolean.TRUE : Boolean.FALSE);
@@ -146,6 +142,7 @@ public class SqlFormatter
           indent++;
           if(!encounterConcate)  //exception for count(*) case and function case
         	  index += insertReturnAndIndent(argList, index + 1, indent);
+          encounterConcate = false;
         }
         else if (token.getString().equals(")")) {
           indent = ((Integer)bracketIndent.pop()).intValue();
@@ -161,6 +158,11 @@ public class SqlFormatter
         }
       } else if (token.getType() == 2)
       {
+    	  if (token.getString().equalsIgnoreCase("COUNT")||token.getString().equalsIgnoreCase("FUNCTION")||
+      			token.getString().equalsIgnoreCase("MAX")) {
+                encounterConcate = true;
+               
+              }    
     	  if((token.getString().equalsIgnoreCase("FUNCTION")) )  
       	{
       	  index += insertReturnAndIndent(argList, index , 0);
@@ -183,10 +185,8 @@ public class SqlFormatter
     	  
         if ((token.getString().equalsIgnoreCase("DELETE")) || (token.getString().equalsIgnoreCase("SELECT")))
         {
-        	System.out.println(argList);
-          indent += 2;
-          
-          if(! argList.get(index-2).getString().startsWith(";"))
+          indent += 2;          
+          if(! argList.get(index).getString().startsWith(";"))
           {
         	  index += insertReturnAndIndent(argList, index, indent-2);
           }
@@ -326,25 +326,31 @@ public class SqlFormatter
     {
       String s = "\n";
 
-      
+      if(argIndex>=1)
+      {
       SqlToken prevToken = (SqlToken)argList.get(argIndex - 1);
       if ((prevToken.getType() == 5) && (prevToken.getString().startsWith("--")))
       {
         s = "";
       }
+      }
       
       
       /*To set insert into in the same line*/
+      if(argIndex>=2)
+      {
       SqlToken prevprevToken = (SqlToken)argList.get(argIndex - 2);
       if ((prevprevToken.getString().startsWith("INSERT")))
       {
         s = " ";
         argIndent--;
       }
+      }
 
       for (int index = 0; index < argIndent; index++) {
         s = s + this.fRule.indentString;
       }
+      
 
       SqlToken token = (SqlToken)argList.get(argIndex);
       if (token.getType() == 0) {
@@ -362,6 +368,8 @@ public class SqlFormatter
 
       return 1;
     } catch (IndexOutOfBoundsException e) {
+    	//omit exception
+//    	e.printStackTrace();  
     }
     return 0;
   }
@@ -447,8 +455,3 @@ public class SqlFormatter
     }
   }
 }
-
-/* Location:           E:\SQLBeautifier\
- * Qualified Name:     blanco.commons.sql.format.BlancoSqlFormatter
- * JD-Core Version:    0.6.2
- */

@@ -232,8 +232,3 @@ public class SqlParser
     return list;
   }
 }
-
-/* Location:           E:\SQLBeautifier\
- * Qualified Name:     blanco.commons.sql.format.BlancoSqlParser
- * JD-Core Version:    0.6.2
- */

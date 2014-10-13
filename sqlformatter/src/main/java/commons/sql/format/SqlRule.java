@@ -30,8 +30,3 @@ public class SqlRule
     this.fFunctionNames = names;
   }
 }
-
-/* Location:           E:\SQLBeautifier\
- * Qualified Name:     blanco.commons.sql.format.BlancoSqlRule
- * JD-Core Version:    0.6.2
- */

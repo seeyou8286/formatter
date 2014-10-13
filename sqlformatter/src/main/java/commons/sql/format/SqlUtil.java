@@ -21,8 +21,3 @@ public class SqlUtil
     return newStr + argTargetString.substring(lastpos);
   }
 }
-
-/* Location:           E:\SQLBeautifier\
- * Qualified Name:     blanco.commons.sql.format.BlancoSqlUtil
- * JD-Core Version:    0.6.2
- */

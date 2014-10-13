@@ -11,8 +11,3 @@ public class SqlTokenConstants
   public static final int END = 6;
   public static final int UNKNOWN = 7;
 }
-
-/* Location:           E:\SQLBeautifier\
- * Qualified Name:     blanco.commons.sql.format.BlancoSqlTokenConstants
- * JD-Core Version:    0.6.2
- */

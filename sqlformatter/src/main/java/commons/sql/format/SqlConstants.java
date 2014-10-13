@@ -12,8 +12,3 @@ public class SqlConstants
 
   public static final String[] SQL_FAMOUS_WORDS = { "TRUNCATE" };
 }
-
-/* Location:           E:\SQLBeautifier\
- * Qualified Name:     blanco.commons.sql.format.BlancoSqlConstants
- * JD-Core Version:    0.6.2
- */
