@@ -137,7 +137,7 @@ public class SqlFormatter
 
           bracketIndent.push(new Integer(indent));
           indent++;
-          if(! argList.get(index-1).getString().startsWith("COUNT"))  //exception for count(*) case
+          if((! argList.get(index-1).getString().startsWith("COUNT")) &&(!argList.get(index-3).getString().startsWith("FUNCTION"))&&(!argList.get(index-1).getString().startsWith("MAX")))  //exception for count(*) case and function case
         	  index += insertReturnAndIndent(argList, index + 1, indent);
         }
         else if (token.getString().equals(")")) {
@@ -154,6 +154,26 @@ public class SqlFormatter
         }
       } else if (token.getType() == 2)
       {
+    	  if((token.getString().equalsIgnoreCase("FUNCTION")) )  
+      	{
+      	  index += insertReturnAndIndent(argList, index , 0);
+      	}  
+    	  
+//    	  if((token.getString().equalsIgnoreCase("IS")) )  
+//        	{
+//    		  indent++;
+//        	  index += insertReturnAndIndent(argList, index+1 , indent);
+//        	}  
+//      	  
+    	  
+    	  
+    	if((token.getString().equalsIgnoreCase("BEGIN")) )  
+    	{
+    	 indent += 1;	
+    	  index += insertReturnAndIndent(argList, index + 1, indent);
+    	}
+    	  
+    	  
         if ((token.getString().equalsIgnoreCase("DELETE")) || (token.getString().equalsIgnoreCase("SELECT")))
         {
           indent += 2;
@@ -240,6 +260,7 @@ public class SqlFormatter
           if (!encounterBetween) {
             index += insertReturnAndIndent(argList, index, indent-1);
           }
+
           encounterBetween = false;
         }
       } else if ((token.getType() == 5) && 
