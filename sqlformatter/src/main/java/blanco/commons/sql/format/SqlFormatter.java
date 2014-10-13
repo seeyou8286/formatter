@@ -154,10 +154,20 @@ public class SqlFormatter
         }
       } else if (token.getType() == 2)
       {
-        if ((token.getString().equalsIgnoreCase("DELETE")) || (token.getString().equalsIgnoreCase("SELECT")) || (token.getString().equalsIgnoreCase("UPDATE")))
+        if ((token.getString().equalsIgnoreCase("DELETE")) || (token.getString().equalsIgnoreCase("SELECT")))
         {
           indent += 2;
+          
+          if(! argList.get(index-2).getString().startsWith(";"))
+          {
+        	  index += insertReturnAndIndent(argList, index, indent-2);
+          }
           index += insertReturnAndIndent(argList, index + 1, indent);
+        }
+        
+        
+        if ((token.getString().equalsIgnoreCase("UPDATE"))){
+        	 indent++;
         }
 
         
@@ -178,11 +188,22 @@ public class SqlFormatter
 //          indent++;
           index += insertReturnAndIndent(argList, index, indent-1);
         }
+        
+        if( (token.getString().equalsIgnoreCase("SET"))){
+        	indent++;
+        	 index += insertReturnAndIndent(argList, index + 1, indent);
+        }
 
-        if ((token.getString().equalsIgnoreCase("FROM")) || (token.getString().equalsIgnoreCase("WHERE")) || (token.getString().equalsIgnoreCase("SET")) || (token.getString().equalsIgnoreCase("ORDER BY")) || (token.getString().equalsIgnoreCase("GROUP BY")) || (token.getString().equalsIgnoreCase("HAVING")))
+        if ((token.getString().equalsIgnoreCase("FROM"))  || (token.getString().equalsIgnoreCase("ORDER BY")) || (token.getString().equalsIgnoreCase("GROUP BY")) || (token.getString().equalsIgnoreCase("HAVING")))
         {        	
           index += insertReturnAndIndent(argList, index, indent - 1); //Indent means one tab
           index += insertReturnAndIndent(argList, index + 1, indent);
+        }
+        
+        if ((token.getString().equalsIgnoreCase("WHERE")) )
+        {
+        	 index += insertReturnAndIndent(argList, index, indent - 1); //Indent means one tab
+             index += insertReturnAndIndent(argList, index + 1, indent);
         }
 
         if (token.getString().equalsIgnoreCase("VALUES")) {
@@ -217,7 +238,7 @@ public class SqlFormatter
         if (token.getString().equalsIgnoreCase("AND"))
         {
           if (!encounterBetween) {
-            index += insertReturnAndIndent(argList, index, indent);
+            index += insertReturnAndIndent(argList, index, indent-1);
           }
           encounterBetween = false;
         }
