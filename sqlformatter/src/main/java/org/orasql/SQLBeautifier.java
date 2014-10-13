@@ -24,6 +24,7 @@ public class SQLBeautifier
     {
       formatedResult = formatter.format(sqlText);
     } catch (SqlFormatterException e) {
+    	e.printStackTrace();
       formatedResult = "Error on parsing sql_text 1 level! Returning original sql: " + System.getProperty("line.separator") + sqlText;
     }
 

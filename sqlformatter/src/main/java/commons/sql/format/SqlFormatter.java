@@ -129,16 +129,22 @@ public class SqlFormatter
     SqlToken prev = new SqlToken(0, " ");
 
     boolean encounterBetween = false;
+    boolean encounterConcate = false;
     for (int index = 0; index < argList.size(); index++) {
       token = (SqlToken)argList.get(index);
       if (token.getType() == 1)
       {
+    	if (token.getString().equalsIgnoreCase("COUNT")||token.getString().equalsIgnoreCase("FUNCTION")||
+    			token.getString().equalsIgnoreCase("MAX")) {
+              encounterConcate = true;
+            }  
+    	  
         if (token.getString().equals("(")) {
           this.functionBracket.push(this.fRule.isFunction(prev.getString()) ? Boolean.TRUE : Boolean.FALSE);
 
           bracketIndent.push(new Integer(indent));
           indent++;
-          if((! argList.get(index-1).getString().startsWith("COUNT")) &&(!argList.get(index-3).getString().startsWith("FUNCTION"))&&(!argList.get(index-1).getString().startsWith("MAX")))  //exception for count(*) case and function case
+          if(!encounterConcate)  //exception for count(*) case and function case
         	  index += insertReturnAndIndent(argList, index + 1, indent);
         }
         else if (token.getString().equals(")")) {
@@ -177,6 +183,7 @@ public class SqlFormatter
     	  
         if ((token.getString().equalsIgnoreCase("DELETE")) || (token.getString().equalsIgnoreCase("SELECT")))
         {
+        	System.out.println(argList);
           indent += 2;
           
           if(! argList.get(index-2).getString().startsWith(";"))
