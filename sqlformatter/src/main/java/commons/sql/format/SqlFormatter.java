@@ -129,6 +129,7 @@ public class SqlFormatter
 
     boolean encounterBetween = false;
     boolean encounterConcate = false;
+    boolean encounterInsert = false;
     for (int index = 0; index < argList.size(); index++) {
       token = (SqlToken)argList.get(index);
       if (token.getType() == 1)
@@ -140,7 +141,7 @@ public class SqlFormatter
 
           bracketIndent.push(new Integer(indent));
           indent++;
-          if(!encounterConcate)  //exception for count(*) case and function case
+          if(!encounterConcate)  //when no aggre keywords
         	  index += insertReturnAndIndent(argList, index + 1, indent);
           encounterConcate = false;
         }
@@ -158,11 +159,9 @@ public class SqlFormatter
         }
       } else if (token.getType() == 2)
       {
-    	  if (token.getString().equalsIgnoreCase("COUNT")||token.getString().equalsIgnoreCase("FUNCTION")||
-      			token.getString().equalsIgnoreCase("MAX")) {
-                encounterConcate = true;
-               
-              }    
+    	  if(SqlConstants.SQL_AGG.toString().indexOf(token.getString())!=-1){
+    		  encounterConcate = true;
+    	  }  
     	  if((token.getString().equalsIgnoreCase("FUNCTION")) )  
       	{
       	  index += insertReturnAndIndent(argList, index , 0);
@@ -202,6 +201,7 @@ public class SqlFormatter
         if ((token.getString().equalsIgnoreCase("INSERT")) )
         {
           indent++;
+          encounterInsert = true;
         }
         
         
@@ -214,7 +214,12 @@ public class SqlFormatter
         if ( (token.getString().equalsIgnoreCase("INTO")) )  //Make into one indent
         {
 //          indent++;
-          index += insertReturnAndIndent(argList, index, indent-1);
+         if(encounterInsert == false)	
+        	 index += insertReturnAndIndent(argList, index, indent-1);
+         else{
+        	 index += insertReturnAndIndent(argList, index, indent-2, encounterInsert);
+        	 encounterInsert =false;
+         }
         }
         
         if( (token.getString().equalsIgnoreCase("SET"))){
@@ -317,14 +322,20 @@ public class SqlFormatter
     }
     return argList;
   }
-
-  private int insertReturnAndIndent(List<SqlToken> argList, int argIndex, int argIndent)
+  
+  
+  
+  private int insertReturnAndIndent(List<SqlToken> argList, int argIndex, int argIndent, boolean encounter)
   {
     if (this.functionBracket.contains(Boolean.TRUE))
       return 0;
     try
     {
-      String s = "\n";
+    	String s = null;
+    	if(encounter == false)
+    		 s= "\n";
+    	else
+    		 s = " ";
 
       if(argIndex>=1)
       {
@@ -333,19 +344,8 @@ public class SqlFormatter
       {
         s = "";
       }
-      }
-      
-      
-      /*To set insert into in the same line*/
-      if(argIndex>=2)
-      {
-      SqlToken prevprevToken = (SqlToken)argList.get(argIndex - 2);
-      if ((prevprevToken.getString().startsWith("INSERT")))
-      {
-        s = " ";
-        argIndent--;
-      }
-      }
+      }      
+   
 
       for (int index = 0; index < argIndent; index++) {
         s = s + this.fRule.indentString;
@@ -373,6 +373,12 @@ public class SqlFormatter
     }
     return 0;
   }
+  
+
+  private int insertReturnAndIndent(List<SqlToken> argList, int argIndex, int argIndent)
+  {
+	  return insertReturnAndIndent(argList, argIndex, argIndent, false);
+	  }
   
   
   
