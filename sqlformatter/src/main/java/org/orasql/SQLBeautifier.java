@@ -1,8 +1,8 @@
 package org.orasql;
 
-import blanco.commons.sql.format.BlancoSqlFormatter;
-import blanco.commons.sql.format.BlancoSqlFormatterException;
-import blanco.commons.sql.format.BlancoSqlRule;
+import blanco.commons.sql.format.SqlFormatter;
+import blanco.commons.sql.format.SqlFormatterException;
+import blanco.commons.sql.format.SqlRule;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -16,13 +16,13 @@ public class SQLBeautifier
   public static String beautify(String sqlText)
   {
     String formatedResult = "";
-    BlancoSqlRule rule = new BlancoSqlRule();
+    SqlRule rule = new SqlRule();
     rule.setFunctionNames(functionsList);
-    BlancoSqlFormatter formatter = new BlancoSqlFormatter(rule);
+    SqlFormatter formatter = new SqlFormatter(rule);
     try
     {
       formatedResult = formatter.format(sqlText);
-    } catch (BlancoSqlFormatterException e) {
+    } catch (SqlFormatterException e) {
       formatedResult = "Error on parsing sql_text 1 level! Returning original sql: " + System.getProperty("line.separator") + sqlText;
     }
 
