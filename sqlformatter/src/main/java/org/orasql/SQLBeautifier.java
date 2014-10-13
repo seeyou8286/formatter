@@ -1,13 +1,14 @@
 package org.orasql;
 
-import blanco.commons.sql.format.SqlFormatter;
-import blanco.commons.sql.format.SqlFormatterException;
-import blanco.commons.sql.format.SqlRule;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintStream;
+
+import commons.sql.format.SqlFormatter;
+import commons.sql.format.SqlFormatterException;
+import commons.sql.format.SqlRule;
 
 public class SQLBeautifier
 {

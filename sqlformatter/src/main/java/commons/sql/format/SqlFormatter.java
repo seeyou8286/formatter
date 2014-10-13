@@ -1,12 +1,13 @@
-package blanco.commons.sql.format;
+package commons.sql.format;
 
-import blanco.commons.sql.format.valueobject.SqlToken;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.List;
 import java.util.Stack;
+
+import commons.sql.format.valueobject.SqlToken;
 
 public class SqlFormatter
 {

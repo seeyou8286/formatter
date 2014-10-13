@@ -1,4 +1,4 @@
-package blanco.commons.sql.format;
+package commons.sql.format;
 
 public class SqlTokenConstants
 {

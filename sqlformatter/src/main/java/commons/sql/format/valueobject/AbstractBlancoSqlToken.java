@@ -1,4 +1,4 @@
-package blanco.commons.sql.format.valueobject;
+package commons.sql.format.valueobject;
 
 public class AbstractBlancoSqlToken
 {

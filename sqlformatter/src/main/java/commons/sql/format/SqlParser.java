@@ -1,8 +1,9 @@
-package blanco.commons.sql.format;
+package commons.sql.format;
 
-import blanco.commons.sql.format.valueobject.SqlToken;
 import java.util.ArrayList;
 import java.util.List;
+
+import commons.sql.format.valueobject.SqlToken;
 
 public class SqlParser
 {
