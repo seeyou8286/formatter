@@ -137,11 +137,12 @@ public class SqlFormatter
 
           bracketIndent.push(new Integer(indent));
           indent++;
-          index += insertReturnAndIndent(argList, index + 1, indent);
+          if(! argList.get(index-1).getString().startsWith("COUNT"))  //exception for count(*) case
+        	  index += insertReturnAndIndent(argList, index + 1, indent);
         }
         else if (token.getString().equals(")")) {
           indent = ((Integer)bracketIndent.pop()).intValue();
-          index += insertReturnAndIndent(argList, index, indent);
+          index += insertReturnAndIndentCustomized(argList, index+1, indent);
           this.functionBracket.pop();
         }
         else if (token.getString().equals(",")) {
@@ -175,7 +176,7 @@ public class SqlFormatter
         if ( (token.getString().equalsIgnoreCase("INTO")) )  //Make into one indent
         {
 //          indent++;
-          index += insertReturnAndIndent(argList, index, indent-2);
+          index += insertReturnAndIndent(argList, index, indent-1);
         }
 
         if ((token.getString().equalsIgnoreCase("FROM")) || (token.getString().equalsIgnoreCase("WHERE")) || (token.getString().equalsIgnoreCase("SET")) || (token.getString().equalsIgnoreCase("ORDER BY")) || (token.getString().equalsIgnoreCase("GROUP BY")) || (token.getString().equalsIgnoreCase("HAVING")))
@@ -186,7 +187,7 @@ public class SqlFormatter
 
         if (token.getString().equalsIgnoreCase("VALUES")) {
 //          indent++;
-          index += insertReturnAndIndent(argList, index, indent-1);
+          index += insertReturnAndIndent(argList, index, indent);
         }
 
         if (token.getString().equalsIgnoreCase("END")) {
@@ -288,6 +289,7 @@ public class SqlFormatter
       if ((prevprevToken.getString().startsWith("INSERT")))
       {
         s = " ";
+        argIndent--;
       }
 
       for (int index = 0; index < argIndent; index++) {
@@ -326,18 +328,15 @@ public class SqlFormatter
 	        return 0;
 	      try
 	      {
-	        String s = "\n";
+	        String s = "";
 	        SqlToken prevToken = (SqlToken)argList.get(argIndex - 1);
-	        System.out.println(prevToken);
 	        if ((prevToken.getType() == 5) && (prevToken.getString().startsWith("--")))
 	        {
 	          s = "";
 	        }
 
 	        
-	        for (int index = 0; index < argIndent; index++) {
-	          s = s + this.fRule.indentString;
-	        }
+	       s = s+ " ";
 
 	        SqlToken token = (SqlToken)argList.get(argIndex);
 	        if (token.getType() == 0) {
