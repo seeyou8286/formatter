@@ -159,21 +159,34 @@ public class SqlFormatter
           index += insertReturnAndIndent(argList, index + 1, indent);
         }
 
-        if ((token.getString().equalsIgnoreCase("INSERT")) || (token.getString().equalsIgnoreCase("INTO")) || (token.getString().equalsIgnoreCase("CREATE")) || (token.getString().equalsIgnoreCase("DROP")) || (token.getString().equalsIgnoreCase("TRUNCATE")) || (token.getString().equalsIgnoreCase("TABLE")) || (token.getString().equalsIgnoreCase("CASE")))
+        
+        if ((token.getString().equalsIgnoreCase("INSERT")) )
+        {
+          indent++;
+        }
+        
+        
+        if ((token.getString().equalsIgnoreCase("CREATE")) || (token.getString().equalsIgnoreCase("DROP")) || (token.getString().equalsIgnoreCase("TRUNCATE")) || (token.getString().equalsIgnoreCase("TABLE")) || (token.getString().equalsIgnoreCase("CASE")))
         {
           indent++;
           index += insertReturnAndIndent(argList, index + 1, indent);
         }
+        
+        if ( (token.getString().equalsIgnoreCase("INTO")) )  //Make into one indent
+        {
+//          indent++;
+          index += insertReturnAndIndent(argList, index, indent-2);
+        }
 
         if ((token.getString().equalsIgnoreCase("FROM")) || (token.getString().equalsIgnoreCase("WHERE")) || (token.getString().equalsIgnoreCase("SET")) || (token.getString().equalsIgnoreCase("ORDER BY")) || (token.getString().equalsIgnoreCase("GROUP BY")) || (token.getString().equalsIgnoreCase("HAVING")))
-        {
-          index += insertReturnAndIndent(argList, index, indent - 1);
+        {        	
+          index += insertReturnAndIndent(argList, index, indent - 1); //Indent means one tab
           index += insertReturnAndIndent(argList, index + 1, indent);
         }
 
         if (token.getString().equalsIgnoreCase("VALUES")) {
-          indent--;
-          index += insertReturnAndIndent(argList, index, indent);
+//          indent++;
+          index += insertReturnAndIndent(argList, index, indent-1);
         }
 
         if (token.getString().equalsIgnoreCase("END")) {
@@ -262,10 +275,19 @@ public class SqlFormatter
     {
       String s = "\n";
 
+      
       SqlToken prevToken = (SqlToken)argList.get(argIndex - 1);
       if ((prevToken.getType() == 5) && (prevToken.getString().startsWith("--")))
       {
         s = "";
+      }
+      
+      
+      /*To set insert into in the same line*/
+      SqlToken prevprevToken = (SqlToken)argList.get(argIndex - 2);
+      if ((prevprevToken.getString().startsWith("INSERT")))
+      {
+        s = " ";
       }
 
       for (int index = 0; index < argIndent; index++) {
@@ -305,13 +327,14 @@ public class SqlFormatter
 	      try
 	      {
 	        String s = "\n";
-
-	        SqlToken prevToken = (SqlToken)argList.get(argIndex-1);
+	        SqlToken prevToken = (SqlToken)argList.get(argIndex - 1);
+	        System.out.println(prevToken);
 	        if ((prevToken.getType() == 5) && (prevToken.getString().startsWith("--")))
 	        {
 	          s = "";
 	        }
 
+	        
 	        for (int index = 0; index < argIndent; index++) {
 	          s = s + this.fRule.indentString;
 	        }
