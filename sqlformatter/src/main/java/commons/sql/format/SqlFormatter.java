@@ -180,9 +180,12 @@ public class SqlFormatter
     	 indent += 1;	
     	  index += insertReturnAndIndent(argList, index + 1, indent);
     	}
+    	
+    	if ((token.getString().equalsIgnoreCase("DELETE"))){
+    		 indent += 2;     
+    	  }
     	  
-    	  
-        if ((token.getString().equalsIgnoreCase("DELETE")) || (token.getString().equalsIgnoreCase("SELECT")))
+        if ( (token.getString().equalsIgnoreCase("SELECT")))
         {
           indent += 2;          
           if(! argList.get(index).getString().startsWith(";"))
