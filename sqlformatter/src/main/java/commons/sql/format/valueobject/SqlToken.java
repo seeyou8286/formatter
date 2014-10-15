@@ -14,8 +14,3 @@ public class SqlToken extends AbstractBlancoSqlToken
     this(argType, argString, -1);
   }
 }
-
-/* Location:           E:\SQLBeautifier\
- * Qualified Name:     blanco.commons.sql.format.valueobject.BlancoSqlToken
- * JD-Core Version:    0.6.2
- */
